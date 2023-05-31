@@ -1,0 +1,14 @@
+﻿@using System.Web;
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter]
+    public string ReturnUrl { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var loginEndpoint = "Login?redirectUri=" + HttpUtility.UrlEncode(ReturnUrl);
+        Navigation.NavigateTo(loginEndpoint, forceLoad: true);
+        await base.OnInitializedAsync();
+    }
+}

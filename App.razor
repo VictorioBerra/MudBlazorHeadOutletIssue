@@ -1,0 +1,35 @@
+﻿@inject NavigationManager Navigation
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (!context.User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <RedirectToLogin ReturnUrl="@Navigation.ToBaseRelativePath(Navigation.Uri)" />
+                    }
+                    else
+                    {
+                        <p role="alert">Sorry, you're not authorized to view this page.</p>
+                    }
+                    <MudText Typo="Typo.h3" GutterBottom="true" Style="@($"color:{Theme.Palette.Error};")">Access Denied</MudText>
+                </NotAuthorized>
+                <Authorizing>
+                    <MudText Typo="Typo.h3" GutterBottom="true">Authorization in progress...</MudText>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    private MudTheme Theme = new MudTheme();
+}
